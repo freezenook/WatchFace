@@ -5,8 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-
 import android.text.format.Time;
+
 
 public class WatchFace {
 
@@ -16,33 +16,45 @@ public class WatchFace {
 
     private final Paint timePaint;
     private final Paint datePaint;
+    private final Paint backgroundPaint;
     private final Time time;
+
+    private static final int DATE_AND_TIME_DEFAULT_COLOUR = Color.WHITE;
+    private static final int BACKGROUND_DEFAULT_COLOUR = Color.BLACK;
+
+    private int backgroundColour = BACKGROUND_DEFAULT_COLOUR;
+    private int dateAndTimeColour = DATE_AND_TIME_DEFAULT_COLOUR;
 
     private boolean shouldShowSeconds = true;
 
     public static WatchFace newInstance(Context context) {
         Paint timePaint = new Paint();
-        timePaint.setColor(Color.WHITE);
+        timePaint.setColor(DATE_AND_TIME_DEFAULT_COLOUR);
         timePaint.setTextSize(context.getResources().getDimension(R.dimen.time_size));
         timePaint.setAntiAlias(true);
 
         Paint datePaint = new Paint();
-        datePaint.setColor(Color.WHITE);
+        datePaint.setColor(DATE_AND_TIME_DEFAULT_COLOUR);
         datePaint.setTextSize(context.getResources().getDimension(R.dimen.date_size));
         datePaint.setAntiAlias(true);
 
-        return new WatchFace(timePaint, datePaint, new Time());
+        Paint backgroundPaint = new Paint();
+        backgroundPaint.setColor(BACKGROUND_DEFAULT_COLOUR);
+
+        return new WatchFace(timePaint, datePaint, backgroundPaint, new Time());
     }
 
-    WatchFace(Paint timePaint, Paint datePaint, Time time) {
+    WatchFace(Paint timePaint, Paint datePaint, Paint backgroundPaint, Time time) {
         this.timePaint = timePaint;
         this.datePaint = datePaint;
+        this.backgroundPaint = backgroundPaint;
         this.time = time;
     }
 
     public void draw(Canvas canvas, Rect bounds) {
         time.setToNow();
-        canvas.drawColor(Color.BLACK);
+        //canvas.drawColor(Color.BLACK);
+        canvas.drawRect(0, 0, bounds.width(), bounds.height(), backgroundPaint);
 
         String timeText = String.format(shouldShowSeconds ? TIME_FORMAT_WITH_SECONDS : TIME_FORMAT_WITHOUT_SECONDS, time.hour, time.minute, time.second);
         float timeXOffset = computeXOffset(timeText, timePaint, bounds);
@@ -88,4 +100,34 @@ public class WatchFace {
     public void setShowSeconds(boolean showSeconds) {
         shouldShowSeconds = showSeconds;
     }
+
+    public void updateDateAndTimeColourTo(int colour) {
+        dateAndTimeColour = colour;
+        timePaint.setColor(colour);
+        datePaint.setColor(colour);
+    }
+
+    public void updateBackgroundColourTo(int colour) {
+        backgroundColour = colour;
+        backgroundPaint.setColor(colour);
+    }
+
+    public void updateBackgroundColourToDefault() {
+        backgroundPaint.setColor(BACKGROUND_DEFAULT_COLOUR);
+    }
+
+    public void updateDateAndTimeColourToDefault() {
+        timePaint.setColor(DATE_AND_TIME_DEFAULT_COLOUR);
+        datePaint.setColor(DATE_AND_TIME_DEFAULT_COLOUR);
+    }
+
+    public void restoreDateAndTimeColour() {
+        timePaint.setColor(dateAndTimeColour);
+        datePaint.setColor(dateAndTimeColour);
+    }
+
+    public void restoreBackgroundColour() {
+        backgroundPaint.setColor(backgroundColour);
+    }
+
 }

@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.freeze.watchface">
 
+    <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:allowBackup="true"
         android:label="@string/app_name"
@@ -7,11 +10,12 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".WatchFaceConfigurationActivity"
+            android:name="WatchFaceConfigurationActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="com.catinean.simpleandroidwatchface.CONFIG_DIGITAL" />
+                <action android:name="com.freezenook.simpleandroidwatchface.CONFIG_DIGITAL" />
+
                 <category android:name="com.google.android.wearable.watchface.category.COMPANION_CONFIGURATION" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
